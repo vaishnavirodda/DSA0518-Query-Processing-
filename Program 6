@@ -1,0 +1,35 @@
+import yfinance as yf
+import matplotlib.pyplot as plt
+
+# Define the stock symbol for Alphabet Inc. (GOOGL)
+stock_symbol = 'GOOGL'
+
+# Define the start and end dates for the plot
+start_date = '2023-01-01'
+end_date = '2023-12-31'
+
+# Fetch the historical stock data using yfinance
+stock_data = yf.download(stock_symbol, start=start_date, end=end_date)
+
+# Print the column names to check the MultiIndex structure
+print("Columns in stock_data:", stock_data.columns)
+
+# Access the relevant columns: 'Volume' and 'Close'
+volume_data = stock_data[('Volume', stock_symbol)]
+close_data = stock_data[('Close', stock_symbol)]
+
+# Drop rows with missing values in 'Volume' or 'Close' (if any)
+stock_data_cleaned = stock_data.dropna(subset=[('Volume', stock_symbol), ('Close', stock_symbol)])
+
+# Create the scatter plot
+plt.figure(figsize=(10, 6))
+plt.scatter(stock_data_cleaned[('Volume', stock_symbol)], stock_data_cleaned[('Close', stock_symbol)], color='blue', alpha=0.6)
+
+# Set the title and labels for the plot
+plt.title(f"Scatter Plot of Trading Volume vs. Stock Prices of Alphabet Inc. ({stock_symbol})\nFrom {start_date} to {end_date}")
+plt.xlabel('Trading Volume')
+plt.ylabel('Stock Prices (Close)')
+
+# Display the plot
+plt.tight_layout()
+plt.show()
